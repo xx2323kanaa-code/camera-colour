@@ -35,38 +35,48 @@
       pointer-events: none;
     }
 
-    #startBtn, .camBtn {
-      position: relative;
-      margin: 6px 0;
-      padding: 8px 16px;
-      font-size: 20px;
-      background: #007bff;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      width: 180px;
-    }
-
-    #controlPanel {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.6);
-      padding: 12px;
-      border-radius: 10px;
-      z-index: 9999;
-      font-size: 16px;
-    }
-
-    #cameraPanel {
+    /* 左側の縦長パネル（カメラ切替 + 設定バー） */
+    #leftPanel {
       position: absolute;
       top: 20px;
       left: 20px;
       background: rgba(0,0,0,0.6);
       padding: 12px;
-      border-radius: 10px;
+      border-radius: 12px;
       z-index: 9999;
-      font-size: 16px;
+    }
+
+    .camBtn {
+      display: block;
+      width: 160px;
+      margin-bottom: 6px;
+      padding: 8px;
+      font-size: 18px;
+      background: #007bff;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      text-align: center;
+    }
+
+    .label {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    /* 最重要：カメラ開始ボタンは最下部中央に固定 */
+    #startBtn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99999;
+      padding: 14px 28px;
+      font-size: 26px;
+      background: #00bfff;
+      border: none;
+      border-radius: 14px;
+      color: white;
     }
 
   </style>
@@ -77,26 +87,26 @@
 
 <body>
 
-  <div id="cameraPanel">
-    <button id="startBtn">カメラ開始（前面）</button>
+  <!-- 左側縦並びパネル -->
+  <div id="leftPanel">
+
     <button class="camBtn" data-id="0">背面カメラ0</button>
     <button class="camBtn" data-id="1">背面カメラ1</button>
     <button class="camBtn" data-id="2">背面カメラ2</button>
     <button class="camBtn" data-id="3">背面カメラ3</button>
+
+    <div class="label">Max objects:</div>
+    <input id="maxObj" type="range" min="1" max="3" value="1" style="width:160px;">
+    <div id="maxObjVal">1</div>
+
+    <div class="label">Min score (%):</div>
+    <input id="minScore" type="range" min="2" max="30" value="10" style="width:160px;">
+    <div id="minScoreVal">10</div>
+
   </div>
 
-  <div id="controlPanel">
-    <div>
-      Max objects:
-      <input id="maxObj" type="range" min="1" max="3" value="1">
-      <span id="maxObjVal">1</span>
-    </div>
-    <div>
-      Min score (%):
-      <input id="minScore" type="range" min="2" max="30" value="10">
-      <span id="minScoreVal">10</span>
-    </div>
-  </div>
+  <!-- 最重要：単独で最下部中央に配置 -->
+  <button id="startBtn">📷 カメラ開始</button>
 
   <video id="video" autoplay playsinline muted></video>
   <canvas id="canvas"></canvas>
