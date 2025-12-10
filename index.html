@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>義手用カスタム物体分類</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      font-family: sans-serif;
+      color: white;
+    }
+
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #startBtn, .camBtn {
+      position: relative;
+      margin: 6px 0;
+      padding: 8px 16px;
+      font-size: 20px;
+      background: #007bff;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      width: 180px;
+    }
+
+    #controlPanel {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.6);
+      padding: 12px;
+      border-radius: 10px;
+      z-index: 9999;
+      font-size: 16px;
+    }
+
+    #cameraPanel {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
+      padding: 12px;
+      border-radius: 10px;
+      z-index: 9999;
+      font-size: 16px;
+    }
+
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+</head>
+
+<body>
+
+  <div id="cameraPanel">
+    <button id="startBtn">カメラ開始（前面）</button>
+    <button class="camBtn" data-id="0">背面カメラ0</button>
+    <button class="camBtn" data-id="1">背面カメラ1</button>
+    <button class="camBtn" data-id="2">背面カメラ2</button>
+    <button class="camBtn" data-id="3">背面カメラ3</button>
+  </div>
+
+  <div id="controlPanel">
+    <div>
+      Max objects:
+      <input id="maxObj" type="range" min="1" max="3" value="1">
+      <span id="maxObjVal">1</span>
+    </div>
+    <div>
+      Min score (%):
+      <input id="minScore" type="range" min="2" max="30" value="10">
+      <span id="minScoreVal">10</span>
+    </div>
+  </div>
+
+  <video id="video" autoplay playsinline muted></video>
+  <canvas id="canvas"></canvas>
+
+  <script src="main.js"></script>
+
+</body>
+</html>
