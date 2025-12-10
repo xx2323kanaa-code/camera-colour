@@ -31,11 +31,10 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 2;
+      z-index: 99999; /* ← ラベルがUIの上に出る */
       pointer-events: none;
     }
 
-    /* 左側の縦長パネル（カメラ切替 + 設定バー） */
     #leftPanel {
       position: absolute;
       top: 20px;
@@ -43,42 +42,31 @@
       background: rgba(0,0,0,0.6);
       padding: 12px;
       border-radius: 12px;
-      z-index: 9999;
+      z-index: 90000;
     }
 
-    .camBtn {
+    .camBtn, #startBtn {
       display: block;
       width: 160px;
       margin-bottom: 6px;
-      padding: 8px;
+      padding: 10px;
       font-size: 18px;
       background: #007bff;
       border: none;
       border-radius: 10px;
       color: white;
-      text-align: center;
     }
 
-    .label {
-      font-size: 14px;
-      margin-top: 10px;
-    }
-
-    /* 最重要：カメラ開始ボタンは最下部中央に固定 */
     #startBtn {
       position: absolute;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 99999;
-      padding: 14px 28px;
+      width: 240px;
       font-size: 26px;
       background: #00bfff;
-      border: none;
-      border-radius: 14px;
-      color: white;
+      z-index: 100000;
     }
-
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0"></script>
@@ -87,25 +75,18 @@
 
 <body>
 
-  <!-- 左側縦並びパネル -->
   <div id="leftPanel">
-
     <button class="camBtn" data-id="0">背面カメラ0</button>
-    <button class="camBtn" data-id="1">背面カメラ1</button>
-    <button class="camBtn" data-id="2">背面カメラ2</button>
-    <button class="camBtn" data-id="3">背面カメラ3</button>
 
-    <div class="label">Max objects:</div>
+    <div>Max objects:</div>
     <input id="maxObj" type="range" min="1" max="3" value="1" style="width:160px;">
     <div id="maxObjVal">1</div>
 
-    <div class="label">Min score (%):</div>
+    <div>Min score (%):</div>
     <input id="minScore" type="range" min="2" max="30" value="10" style="width:160px;">
     <div id="minScoreVal">10</div>
-
   </div>
 
-  <!-- 最重要：単独で最下部中央に配置 -->
   <button id="startBtn">📷 カメラ開始</button>
 
   <video id="video" autoplay playsinline muted></video>
