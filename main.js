@@ -1,19 +1,18 @@
 let model;
 let currentDeviceId = null;
 
-const startBtn = document.getElementById("startBtn");
-const camBtns = document.querySelectorAll(".camBtn");
-
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
+const startBtn = document.getElementById("startBtn");
+const camBtn = document.querySelector(".camBtn");
 
 const maxObjSlider = document.getElementById("maxObj");
 const maxObjVal = document.getElementById("maxObjVal");
 const minScoreSlider = document.getElementById("minScore");
 const minScoreVal = document.getElementById("minScoreVal");
 
-// UI反映
 maxObjSlider.oninput = () => maxObjVal.textContent = maxObjSlider.value;
 minScoreSlider.oninput = () => minScoreVal.textContent = minScoreSlider.value;
 
@@ -31,32 +30,23 @@ const CLASS_MAP = {
 
   "wine glass": "Key",
   "cell phone": "Phone",
+
+  "coin": "Key" // ← COCOには無いが誤認処理用
 };
 
-// 完全無視するクラス
+// 完全無視
 const IGNORE = new Set([
-  "person",
-  "cup",
-  "bottle",
-  "bowl",
-  "chair",
-  "sofa",
-  "tv",
-  "dog",
-  "cat",
-  "bed",
-  "bench",
-  "potted plant",
-  "dining table",
-  "refrigerator"
+  "person", "cup", "bottle", "bowl",
+  "chair", "sofa", "tv", "dog", "cat",
+  "bed", "bench", "potted plant", "dining table", "refrigerator"
 ]);
 
-// 色設定
+// 色設定修正版（Phone→blue）
 const COLORS = {
   Pen: "yellow",
-  Egg: "cyan",
+  Egg: "blue",
   Key: "white",
-  Phone: "yellow",
+  Phone: "blue",
 };
 
 async function loadModel() {
@@ -85,16 +75,14 @@ async function startCamera(deviceId = null) {
 
 startBtn.addEventListener("click", async () => {
   await loadModel();
-  startCamera(null); // 前面カメラ
+  startCamera(null);
 });
 
-camBtns.forEach(btn => {
-  btn.addEventListener("click", async () => {
-    const id = btn.dataset.id;
-    currentDeviceId = id;  
-    await loadModel();
-    startCamera(id); // 背面カメラ切替
-  });
+camBtn.addEventListener("click", async () => {
+  const id = camBtn.dataset.id;
+  currentDeviceId = id;
+  await loadModel();
+  startCamera(id);
 });
 
 async function detect() {
@@ -112,7 +100,6 @@ async function detect() {
 
     const orig = pred.class;
     const score = pred.score;
-
     if (score < minScore) return;
     if (IGNORE.has(orig)) return;
 
@@ -121,14 +108,17 @@ async function detect() {
 
     const color = COLORS[mapped] || "lime";
 
-    const [x, y, width, height] = pred.bbox;
+    let [x, y, width, height] = pred.bbox;
+
+    // UIと重ならないように右30px以上へずらす
+    if (x < 200) x = 220;
 
     ctx.strokeStyle = color;
-    ctx.lineWidth = 6;            // 線を太く
+    ctx.lineWidth = 6;
     ctx.strokeRect(x, y, width, height);
 
     ctx.fillStyle = color;
-    ctx.font = "40px sans-serif"; // 文字大
+    ctx.font = "40px sans-serif";
     ctx.fillText(mapped, x, y > 40 ? y - 10 : y + 40);
 
     count++;
